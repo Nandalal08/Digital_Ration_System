@@ -1,0 +1,114 @@
+<!-- if new user then register -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registration</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="./css/main.css">
+
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$( "#form1" ).submit(function(event) {
+				event.preventDefault();
+
+				$.ajax({
+					type: 'POST',
+					url: '/',
+					data: $('#form1').serialize(),
+					dataType: "json",
+					success: function(response){
+						//alert("a");
+						//console.log(response.Success);
+						$('#form1')[0].reset();
+
+						document.getElementById("check").innerHTML=response.Success;
+         					//ADD THIS CODE
+         					setTimeout(function(){
+         						document.getElementById("check").innerHTML="";
+         					},3000);
+         					if (response.Success=="You are regestered,You can login now.") {
+         						document.getElementById("aa").click();
+         					};
+         				},
+         				error: function() {
+         				}
+         			})
+			});
+		});
+	</script>
+</head>
+<body>
+
+<div class="container">
+    
+	<div class="screen">
+		<div class="screen__content">
+        <h1 class="heading">  </h1>
+<div class="four">
+  <h1><span></span> Digitalised<em>Ration</em> System</h1>
+</div>
+
+			<form id="form1" method="post" class="login">
+				
+				<div class="login__field">
+					<i class="login__icon fas fa-user"></i>
+					<input type="email" name="email" class="login__input" placeholder="E-mail" required="" >
+				</div>
+
+				<div class="login__field">
+					<i class="login__icon fas fa-user"></i>
+				<input type="text" name="username" class="login__input" placeholder="Username" required="" class="form-control">
+				</div>
+
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+				<input type="password" name="password" class="login__input" placeholder="Password" required="" class="form-control"><br/>
+					
+
+				</div>
+
+                <div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+				<input type="password" class="login__input" name="passwordConf" placeholder="Confirm Password" required="" class="form-control"><br/>
+				</div>
+
+
+
+				<button class="button login__submit btn btn-success " type="submit" value="register">
+
+				
+	
+					<span class="button__text">Register</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>
+								
+			</form>
+			<div class="links">
+			<span>Already Registered! <a href="/login">Login</a></span>
+				
+			</div>
+			
+		</div>
+		<div class="screen__background">
+			<span class="screen__background__shape screen__background__shape4"></span>
+			<span class="screen__background__shape screen__background__shape3"></span>		
+			<span class="screen__background__shape screen__background__shape2"></span>
+			<span class="screen__background__shape screen__background__shape1"></span>
+		</div>
+		<div class="mssg bg-danger">
+			<span id="check"></span>
+		</div>		
+	</div>
+	<div id="LangTable"><a href="/login" id="aa"></a> </div>
+</div>
+    
+</body>
+
+</html>

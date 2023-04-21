@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Digitalised Ration System</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>The Digitalised Ration System</h1>
+        <a href="/logout" class="logout-btn">Log out</a>
+      </div>
+      <div class="user-profile">
+        <h2>Personal Information</h2>
+        <div class="user-info">
+          <center>
+            <table class="table table-hover text-center">
+              <tr>
+                <td>Name</td>
+                <td><%= name %></td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td><%= email %></td>
+              </tr>
+            </table>
+          </center>
+          
+          <table>
+            <tr>
+              <td id="c3">Available balance: 2000</td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+      <div class="stock">
+        <h2>Stock</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Available</th>
+              <th>Unit of Measure</th>
+              <th>Price(per kg/l)</th>
+              <th>Purchase Quantity</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rice</td>
+              <td id="rice-stock">200 kg</td>
+              <td>kg</td>
+              <td>Rs 15</td>
+              <td><input type="number" id="rice-purchase" /></td>
+              <td id="w2"></td>
+            </tr>
+            <tr>
+              <td>Kerosene</td>
+              <td id="kerosene-stock">50 litres</td>
+              <td>litres</td>
+              <td>Rs 15</td>
+              <td><input type="number" id="kerosene-purchase" /></td>
+              <td id="w3"></td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="5">Total Amount:</td>
+              <td id="total-amount"></td>
+              <!-- <td id="available-credit"></td> -->
+            </tr>
+          </tbody>
+        </table>
+        <button class="purchase-btn" onclick="purchaseItems()">Purchase</button>
+      </div>
+    </div>
+
+    <div class="payment">
+      <!-- <p>Thank you for your purchase!</p> -->
+      <p>Please scan the QR code to credit into account.</p>
+    </div>
+    <div class="qr-code">
+      <img id="qr-image" src="css/qr.png" />
+    </div>
+    <!-- <script src="script.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/qrcode.min.js"></script>
+    <!-- <script> -->
+    <script>
+      function purchaseItems() {
+        // Get the input values
+        //const wheatFlourPurchase = parseInt(document.getElementById("wheatflour-purchase").value);
+        const ricePurchase = parseInt(
+          document.getElementById("rice-purchase").value
+        );
+        const kerosenePurchase = parseInt(
+          document.getElementById("kerosene-purchase").value
+        );
+
+        // Get the stock values
+        //let wheatFlourStock = parseInt(document.getElementById("wheatflour-stock").textContent);
+        let riceStock = parseInt(
+          document.getElementById("rice-stock").textContent
+        );
+        let keroseneStock = parseInt(
+          document.getElementById("kerosene-stock").textContent
+        );
+
+        // Update the stock values
+
+        if (ricePurchase > 0 && riceStock >= ricePurchase) {
+          riceStock -= ricePurchase;
+          document.getElementById("rice-stock").textContent = riceStock;
+        }
+        if (kerosenePurchase > 0 && keroseneStock >= kerosenePurchase) {
+          keroseneStock -= kerosenePurchase;
+          document.getElementById("kerosene-stock").textContent = keroseneStock;
+        }
+
+        // Reset the input values
+        // document.getElementById("wheatflour-purchase").value = "";
+        document.getElementById("rice-purchase").value = "";
+        document.getElementById("kerosene-purchase").value = "";
+
+        // Calculate the amount for each item
+        let totalAmount = 0;
+
+        // Check if ricePurchase is a number greater than zero
+        if (typeof ricePurchase === "number" && ricePurchase > 0) {
+          const riceAmount = ricePurchase * 15;
+          document.querySelector("#w2").textContent = "Rs " + riceAmount;
+          totalAmount += riceAmount; // Add riceAmount to totalAmount
+        }
+
+        // Check if kerosenePurchase is a number greater than zero
+        if (typeof kerosenePurchase === "number" && kerosenePurchase > 0) {
+          const keroseneAmount = kerosenePurchase * 15;
+          document.querySelector("#w3").textContent = "Rs " + keroseneAmount;
+          totalAmount += keroseneAmount; // Add keroseneAmount to totalAmount
+        }
+
+        // Update the total amount
+        document.querySelector("#total-amount").textContent =
+          "Rs " + totalAmount;
+
+        // Update the available balance
+        const currentBalance = parseInt(
+          document.querySelector("#c3").textContent.split(": ")[1]
+        );
+        console.log(currentBalance);
+        const newBalance = currentBalance - totalAmount;
+        document.querySelector("#c3").textContent =
+          "Available balance: " + newBalance;
+
+        //const s = parseInt(document.getElementById("c3").value); -->
+
+        // Display the total amount
+        //document.querySelector(".stock").insertAdjacentHTML("beforeend", "<p>Total Amount: Rs " + totalAmount + "</p>");
+
+        //	<!-- const credit = parseInt(document.getElementById("acredit").value// -->
+
+        // Get the input valu
+
+        const qrcode = new QRCode(document.getElementById("qrcode"), {
+          text:
+            "upi://pay?pa=example@upi&pn=Example%20Name&tr=123456789012345&am=" +
+            totalAmount +
+            "&cu=INR",
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
+
+        // Deduct the total amount from the available credit
+      }
+    </script>
+  </body>
+</html>
